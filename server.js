@@ -43,7 +43,7 @@ ${order.cart.map(item =>
       },
       {
         headers: {
-          Authorization: `token ${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}`,
+          Authorization: `token ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github+json"
         }
       }
