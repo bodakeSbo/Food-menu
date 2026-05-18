@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
@@ -7,9 +8,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN";
-const OWNER = "YOUR_GITHUB_USERNAME";
-const REPO = "YOUR_REPOSITORY_NAME";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const OWNER = "bodakeSbo";
+const REPO = "Food-menu";
 
 app.post("/order", async (req, res) => {
 
