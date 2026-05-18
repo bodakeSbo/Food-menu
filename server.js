@@ -36,18 +36,18 @@ ${order.cart.map(item =>
 `;
 
     await axios.post(
-      `https://api.github.com/repos/${bodakeSbo}/${Food-menu}/issues`,
-      {
-        title: issueTitle,
-        body: issueBody
-      },
-      {
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-          Accept: "application/vnd.github+json"
-        }
-      }
-    );
+  `https://api.github.com/repos/${OWNER}/${REPO}/issues`,
+  {
+    title: issueTitle,
+    body: issueBody
+  },
+  {
+    headers: {
+      Authorization: `token ${GITHUB_TOKEN}`,
+      Accept: "application/vnd.github+json"
+    }
+  }
+);
 
     res.json({
       success: true,
