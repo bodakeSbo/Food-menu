@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Menu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        main {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .menu-section {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .section-title {
+            background-color: #444;
+            color: white;
+            padding: 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .menu-items {
+            padding: 1rem;
+        }
+        
+        .menu-item {
+            border-bottom: 1px solid #eee;
+            padding: 1rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .item-info h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .item-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .item-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #27ae60;
+            white-space: nowrap;
+            margin-left: 1rem;
+        }
+        
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🍽️ Food Menu</h1>
+        <p>Welcome to our restaurant</p>
+    </header>
+    
+    <main>
+        <section class="menu-section">
+            <div class="section-title">Appetizers</div>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Garlic Bread</h3>
+                        <p>Toasted bread with garlic butter and herbs</p>
+                    </div>
+                    <div class="item-price">$4.99</div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Spring Rolls</h3>
+                        <p>Crispy rolls filled with vegetables and meat</p>
+                    </div>
+                    <div class="item-price">$5.99</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="menu-section">
+            <div class="section-title">Main Courses</div>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Grilled Salmon</h3>
+                        <p>Fresh salmon fillet with seasonal vegetables</p>
+                    </div>
+                    <div class="item-price">$18.99</div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Pasta Carbonara</h3>
+                        <p>Classic Italian pasta with bacon and cream sauce</p>
+                    </div>
+                    <div class="item-price">$12.99</div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Beef Steak</h3>
+                        <p>Premium cut with mashed potatoes and gravy</p>
+                    </div>
+                    <div class="item-price">$22.99</div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="menu-section">
+            <div class="section-title">Desserts</div>
+            <div class="menu-items">
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Chocolate Cake</h3>
+                        <p>Rich chocolate cake with ganache frosting</p>
+                    </div>
+                    <div class="item-price">$6.99</div>
+                </div>
+                <div class="menu-item">
+                    <div class="item-info">
+                        <h3>Cheesecake</h3>
+                        <p>New York style cheesecake with berry topping</p>
+                    </div>
+                    <div class="item-price">$7.99</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2026 Food Menu Restaurant. All rights reserved.</p>
+    </footer>
+</body>
+</html>
