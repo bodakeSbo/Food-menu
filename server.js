@@ -6,10 +6,9 @@ const axios = require("axios");
 const app = express();
 
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
+  origin: "*"
 }));
+
 app.use(express.json());
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
