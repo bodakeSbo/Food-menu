@@ -1,174 +1,428 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Menu</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-        
-        header {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-        }
-        
-        header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        main {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        
-        .menu-section {
-            background-color: white;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .section-title {
-            background-color: #444;
-            color: white;
-            padding: 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .menu-items {
-            padding: 1rem;
-        }
-        
-        .menu-item {
-            border-bottom: 1px solid #eee;
-            padding: 1rem 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-        
-        .item-info h3 {
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        
-        .item-info p {
-            color: #666;
-            font-size: 0.9rem;
-        }
-        
-        .item-price {
-            font-size: 1.25rem;
-            font-weight: bold;
-            color: #27ae60;
-            white-space: nowrap;
-            margin-left: 1rem;
-        }
-        
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 1.5rem 0;
-            margin-top: 2rem;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>Bodake's Kitchen</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f4f4;
+  color:#333;
+}
+
+header{
+  background:#ff5722;
+  color:white;
+  padding:20px;
+  text-align:center;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
+}
+
+.container{
+  width:90%;
+  max-width:1100px;
+  margin:auto;
+  padding:20px 0;
+}
+
+.menu{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,0.15);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+}
+
+.card img{
+  width:100%;
+  height:200px;
+  object-fit:cover;
+}
+
+.card-content{
+  padding:15px;
+  text-align:center;
+}
+
+.card h3{
+  margin-bottom:10px;
+}
+
+.price{
+  color:#ff5722;
+  font-size:20px;
+  margin-bottom:10px;
+}
+
+button{
+  background:#ff5722;
+  color:white;
+  border:none;
+  padding:10px 15px;
+  border-radius:6px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#e64a19;
+}
+
+.order-box{
+  margin-top:40px;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+.order-box h2{
+  margin-bottom:20px;
+}
+
+.cart-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+  padding:10px;
+  background:#fafafa;
+  border-radius:6px;
+}
+
+.total{
+  margin-top:15px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+input,textarea{
+  width:100%;
+  padding:12px;
+  margin-top:12px;
+  border:1px solid #ccc;
+  border-radius:6px;
+}
+
+.submit-btn{
+  width:100%;
+  margin-top:15px;
+  font-size:18px;
+}
+
+.success{
+  color:green;
+  margin-top:15px;
+  font-weight:bold;
+}
+
+.remove-btn{
+  background:red;
+  padding:6px 10px;
+}
+
+.loading{
+  opacity:0.7;
+  pointer-events:none;
+}
+
+.empty{
+  color:#777;
+  margin-bottom:15px;
+}
+
+</style>
 </head>
+
 <body>
-    <header>
-        <h1>🍽️ Food Menu</h1>
-        <p>Welcome to our restaurant</p>
-    </header>
-    
-    <main>
-        <section class="menu-section">
-            <div class="section-title">Appetizers</div>
-            <div class="menu-items">
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Garlic Bread</h3>
-                        <p>Toasted bread with garlic butter and herbs</p>
-                    </div>
-                    <div class="item-price">$4.99</div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Spring Rolls</h3>
-                        <p>Crispy rolls filled with vegetables and meat</p>
-                    </div>
-                    <div class="item-price">$5.99</div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="menu-section">
-            <div class="section-title">Main Courses</div>
-            <div class="menu-items">
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Grilled Salmon</h3>
-                        <p>Fresh salmon fillet with seasonal vegetables</p>
-                    </div>
-                    <div class="item-price">$18.99</div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Pasta Carbonara</h3>
-                        <p>Classic Italian pasta with bacon and cream sauce</p>
-                    </div>
-                    <div class="item-price">$12.99</div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Beef Steak</h3>
-                        <p>Premium cut with mashed potatoes and gravy</p>
-                    </div>
-                    <div class="item-price">$22.99</div>
-                </div>
-            </div>
-        </section>
-        
-        <section class="menu-section">
-            <div class="section-title">Desserts</div>
-            <div class="menu-items">
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Chocolate Cake</h3>
-                        <p>Rich chocolate cake with ganache frosting</p>
-                    </div>
-                    <div class="item-price">$6.99</div>
-                </div>
-                <div class="menu-item">
-                    <div class="item-info">
-                        <h3>Cheesecake</h3>
-                        <p>New York style cheesecake with berry topping</p>
-                    </div>
-                    <div class="item-price">$7.99</div>
-                </div>
-            </div>
-        </section>
-    </main>
-    
-    <footer>
-        <p>&copy; 2026 Food Menu Restaurant. All rights reserved.</p>
-    </footer>
+
+<header>
+  <h1>🍔 Bodake's Kitchen</h1>
+  <p>Fresh Food Delivered Fast</p>
+</header>
+
+<div class="container">
+
+  <div class="menu">
+
+    <!-- BURGER -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600">
+      <div class="card-content">
+        <h3>Burger</h3>
+        <div class="price">₹199</div>
+        <button onclick="addToCart('Burger',199)">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- PIZZA -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600">
+      <div class="card-content">
+        <h3>Pizza</h3>
+        <div class="price">₹299</div>
+        <button onclick="addToCart('Pizza',299)">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- PASTA -->
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600">
+      <div class="card-content">
+        <h3>Pasta</h3>
+        <div class="price">₹249</div>
+        <button onclick="addToCart('Pasta',249)">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ORDER SECTION -->
+  <div class="order-box">
+
+    <h2>Your Order</h2>
+
+    <div id="cartContainer">
+      <p class="empty">Cart is empty</p>
+    </div>
+
+    <div class="total" id="totalPrice">
+      Total: ₹0
+    </div>
+
+    <form id="orderForm">
+
+      <input
+        type="text"
+        id="username"
+        placeholder="Your Name"
+        required
+      >
+
+      <input
+        type="tel"
+        id="mobile"
+        placeholder="Mobile Number"
+        required
+      >
+
+      <textarea
+        id="location"
+        rows="4"
+        placeholder="Delivery Address"
+        required
+      ></textarea>
+
+      <button class="submit-btn" type="submit">
+        Place Order
+      </button>
+
+    </form>
+
+    <p class="success" id="successMessage"></p>
+
+  </div>
+
+</div>
+
+<script>
+
+const BACKEND_URL = "https://your-backend-url.com/order";
+
+let cart = [];
+
+function addToCart(name, price){
+
+  const existing = cart.find(item => item.name === name);
+
+  if(existing){
+    existing.qty += 1;
+  } else {
+    cart.push({
+      name,
+      price,
+      qty:1
+    });
+  }
+
+  renderCart();
+}
+
+function removeItem(name){
+
+  cart = cart.filter(item => item.name !== name);
+
+  renderCart();
+}
+
+function renderCart(){
+
+  const container =
+    document.getElementById("cartContainer");
+
+  const totalElement =
+    document.getElementById("totalPrice");
+
+  container.innerHTML = "";
+
+  if(cart.length === 0){
+
+    container.innerHTML =
+      '<p class="empty">Cart is empty</p>';
+
+    totalElement.innerText = "Total: ₹0";
+
+    return;
+  }
+
+  let total = 0;
+
+  cart.forEach(item => {
+
+    total += item.price * item.qty;
+
+    const div = document.createElement("div");
+
+    div.className = "cart-item";
+
+    div.innerHTML = `
+      <div>
+        <strong>${item.name}</strong><br>
+        ₹${item.price} × ${item.qty}
+      </div>
+
+      <div>
+        ₹${item.price * item.qty}
+        <button
+          class="remove-btn"
+          onclick="removeItem('${item.name}')"
+        >
+          X
+        </button>
+      </div>
+    `;
+
+    container.appendChild(div);
+
+  });
+
+  totalElement.innerText = `Total: ₹${total}`;
+}
+
+document
+.getElementById("orderForm")
+.addEventListener("submit", async function(e){
+
+  e.preventDefault();
+
+  if(cart.length === 0){
+    alert("Please add items");
+    return;
+  }
+
+  const name =
+    document.getElementById("username").value.trim();
+
+  const mobile =
+    document.getElementById("mobile").value.trim();
+
+  const location =
+    document.getElementById("location").value.trim();
+
+  if(mobile.length < 10){
+    alert("Invalid mobile number");
+    return;
+  }
+
+  const button =
+    document.querySelector(".submit-btn");
+
+  button.innerText = "Processing...";
+  button.disabled = true;
+
+  try{
+
+    const response = await fetch(BACKEND_URL,{
+
+      method:"POST",
+
+      headers:{
+        "Content-Type":"application/json"
+      },
+
+      body:JSON.stringify({
+        customer:{
+          name,
+          mobile,
+          location
+        },
+        cart
+      })
+
+    });
+
+    const data = await response.json();
+
+    if(response.ok){
+
+      document.getElementById("successMessage")
+      .innerText =
+        "✅ Order placed successfully!";
+
+      cart = [];
+      renderCart();
+
+      this.reset();
+
+    } else {
+
+      alert(data.message || "Order failed");
+
+    }
+
+  } catch(error){
+
+    console.log(error);
+
+    alert("Server error");
+
+  } finally {
+
+    button.innerText = "Place Order";
+    button.disabled = false;
+
+  }
+
+});
+
+</script>
+
 </body>
 </html>
+```
