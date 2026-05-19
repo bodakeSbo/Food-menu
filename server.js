@@ -6,7 +6,6 @@ const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
 
-// CORS (keep simple)
 app.use(cors());
 app.use(express.json());
 
@@ -19,11 +18,9 @@ const supabase = createClient(
 );
 
 /* =========================
-   GITHUB SETUP (optional)
+   GITHUB SETUP
 ========================= */
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-console.log("GitHub token exists:", !!GITHUB_TOKEN);
-console.log("Token prefix:", GITHUB_TOKEN?.slice(0, 10));
 const OWNER = "bodakeSbo";
 const REPO = "Food-menu";
 
@@ -34,15 +31,11 @@ app.post("/order", async (req, res) => {
   try {
     const order = req.body;
 
-    // Calculate total
     let total = 0;
     order.cart.forEach(item => {
       total += item.price * item.qty;
     });
 
-    /* =========================
-       1. SAVE TO SUPABASE
-    ========================= */
     const { error: dbError } = await supabase
       .from("orders")
       .insert([
@@ -62,46 +55,41 @@ app.post("/order", async (req, res) => {
       });
     }
 
-    /* =========================
-       2. CREATE GITHUB ISSUE (optional)
-    ========================= */
     if (GITHUB_TOKEN) {
       const issueTitle = `New Order from ${order.customer.name}`;
 
       const issueBody = `
 Customer Name: ${order.customer.name}
-
 Mobile: ${order.customer.mobile}
-
-Address:
-${order.customer.location}
+Address: ${order.customer.location}
 
 Order Items:
-${order.cart
-  .map(item => `- ${item.name} x${item.qty} = ₹${item.price * item.qty}`)
-  .join("\n")}
+${order.cart.map(item =>
+  `- ${item.name} x${item.qty} = ₹${item.price * item.qty}`
+).join("\n")}
 
 Total: ₹${total}
 `;
 
-      await axios.post(
-        `https://api.github.com/repos/${OWNER}/${REPO}/issues`,
-        {
-          title: issueTitle,
-          body: issueBody
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${GITHUB_TOKEN}`,
-            Accept: "application/vnd.github+json"
+      try {
+        await axios.post(
+          `https://api.github.com/repos/${OWNER}/${REPO}/issues`,
+          {
+            title: issueTitle,
+            body: issueBody
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${GITHUB_TOKEN}`,
+              Accept: "application/vnd.github+json"
+            }
           }
-        }
-      );
+        );
+      } catch (githubError) {
+        console.log("GitHub error:", githubError.response?.data || githubError.message);
+      }
     }
 
-    /* =========================
-       RESPONSE
-    ========================= */
     res.json({
       success: true,
       message: "Order saved successfully"
@@ -109,10 +97,37 @@ Total: ₹${total}
 
   } catch (error) {
     console.log(error.response?.data || error.message);
-
     res.status(500).json({
       success: false,
       message: "Server error"
+    });
+  }
+});
+
+/* =========================
+   GITHUB TEST ROUTE (ADD THIS)
+========================= */
+app.get("/github-test", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://api.github.com/user",
+      {
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github+json"
+        }
+      }
+    );
+
+    res.json({
+      ok: true,
+      login: response.data.login
+    });
+
+  } catch (err) {
+    res.json({
+      ok: false,
+      error: err.response?.data || err.message
     });
   }
 });
