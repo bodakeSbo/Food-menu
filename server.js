@@ -22,6 +22,8 @@ const supabase = createClient(
    GITHUB SETUP (optional)
 ========================= */
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+console.log("GitHub token exists:", !!GITHUB_TOKEN);
+console.log("Token prefix:", GITHUB_TOKEN?.slice(0, 10));
 const OWNER = "bodakeSbo";
 const REPO = "Food-menu";
 
