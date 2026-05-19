@@ -90,7 +90,7 @@ Total: ₹${total}
         },
         {
           headers: {
-            Authorization: `token ${GITHUB_TOKEN}`,
+            Authorization: `Bearer ${GITHUB_TOKEN}`,
             Accept: "application/vnd.github+json"
           }
         }
