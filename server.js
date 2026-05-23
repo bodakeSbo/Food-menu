@@ -102,41 +102,6 @@ try {
   );
 
 }
-    if (GITHUB_TOKEN) {
-      const issueTitle = `New Order from ${order.customer.name}`;
-
-      const issueBody = `
-Customer Name: ${order.customer.name}
-Mobile: ${order.customer.mobile}
-Address: ${order.customer.location}
-
-Order Items:
-${order.cart.map(item =>
-  `- ${item.name} x${item.qty} = ₹${item.price * item.qty}`
-).join("\n")}
-
-Total: ₹${total}
-`;
-
-      try {
-        await axios.post(
-          `https://api.github.com/repos/${OWNER}/${REPO}/issues`,
-          {
-            title: issueTitle,
-            body: issueBody
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${GITHUB_TOKEN}`,
-              Accept: "application/vnd.github+json"
-            }
-          }
-        );
-      } catch (githubError) {
-        console.log("GitHub error:", githubError.response?.data || githubError.message);
-      }
-    }
-
     res.json({
       success: true,
       message: "Order saved successfully"
