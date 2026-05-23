@@ -64,7 +64,44 @@ app.post("/order", async (req, res) => {
         message: "Database insert failed"
       });
     }
+/* =========================
+   WHATSAPP NOTIFICATION
+========================= */
+const whatsappMessage = `
+🍔 NEW FOOD ORDER
 
+👤 Customer: ${order.customer.name}
+📞 Mobile: ${order.customer.mobile}
+
+📍 Address:
+${order.customer.location}
+
+🛒 ITEMS:
+${order.cart.map(item =>
+  `• ${item.name} x${item.qty} = ₹${item.price * item.qty}`
+).join("\n")}
+
+💰 TOTAL: ₹${total}
+`;
+
+try {
+
+  await client.messages.create({
+    from: process.env.TWILIO_WHATSAPP_NUMBER,
+    to: process.env.OWNER_WHATSAPP_NUMBER,
+    body: whatsappMessage
+  });
+
+  console.log("WhatsApp notification sent");
+
+} catch (whatsappError) {
+
+  console.log(
+    "WhatsApp error:",
+    whatsappError.message
+  );
+
+}
     if (GITHUB_TOKEN) {
       const issueTitle = `New Order from ${order.customer.name}`;
 
