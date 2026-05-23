@@ -1,3 +1,4 @@
+const twilio = require("twilio");
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
@@ -23,6 +24,15 @@ const supabase = createClient(
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const OWNER = "bodakeSbo";
 const REPO = "Food-menu";
+
+/* =========================
+   TWILIO WHATSAPP SETUP
+========================= */
+
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 /* =========================
    ORDER API
