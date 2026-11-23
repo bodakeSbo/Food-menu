@@ -137,21 +137,10 @@ textarea{
   font-size:18px;
 }
 
-.status-message{
-  margin-top:15px;
-  font-weight:bold;
-}
-
 .success{
   color:green;
-}
-
-.pending{
-  color:#d97706;
-}
-
-.cancelled{
-  color:#c62828;
+  margin-top:15px;
+  font-weight:bold;
 }
 
 .remove-btn{
@@ -165,6 +154,7 @@ textarea{
 }
 
 </style>
+
 </head>
 
 <body>
@@ -178,15 +168,20 @@ textarea{
   >
 
   <h1>🍔 Bodake's Kitchen</h1>
+
   <p>Fresh Food Delivered Fast</p>
 
 </header>
 
+
 <div class="container">
+
 
   <div class="menu">
 
+
     <!-- BURGER -->
+
     <div class="card">
 
       <img
@@ -215,6 +210,7 @@ textarea{
 
 
     <!-- PIZZA -->
+
     <div class="card">
 
       <img
@@ -243,6 +239,7 @@ textarea{
 
 
     <!-- PASTA -->
+
     <div class="card">
 
       <img
@@ -269,13 +266,16 @@ textarea{
 
     </div>
 
+
   </div>
 
 
   <!-- ORDER SECTION -->
+
   <div class="order-box">
 
     <h2>Your Order</h2>
+
 
     <div id="cartContainer">
 
@@ -284,6 +284,7 @@ textarea{
       </p>
 
     </div>
+
 
     <div
       class="total"
@@ -295,12 +296,14 @@ textarea{
 
     <form id="orderForm">
 
+
       <input
         type="text"
         id="username"
         placeholder="Your Name"
         required
       >
+
 
       <input
         type="tel"
@@ -309,12 +312,14 @@ textarea{
         required
       >
 
+
       <textarea
         id="location"
         rows="4"
         placeholder="Delivery Address"
         required
       ></textarea>
+
 
       <button
         class="submit-btn"
@@ -323,4 +328,382 @@ textarea{
         Proceed to Payment
       </button>
 
-    </
+
+    </form>
+
+
+    <p
+      class="success"
+      id="successMessage"
+    ></p>
+
+
+  </div>
+
+
+</div>
+
+
+<script>
+
+/* =========================
+   BACKEND
+========================= */
+
+const BACKEND_URL =
+  "https://food-menu-backend-5z12.onrender.com/order";
+
+
+/* =========================
+   CART
+========================= */
+
+let cart = [];
+
+
+function addToCart(name, price){
+
+  const existing =
+    cart.find(
+      item => item.name === name
+    );
+
+
+  if(existing){
+
+    existing.qty += 1;
+
+  } else {
+
+    cart.push({
+      name,
+      price,
+      qty:1
+    });
+
+  }
+
+
+  renderCart();
+
+}
+
+
+function removeItem(name){
+
+  cart =
+    cart.filter(
+      item => item.name !== name
+    );
+
+
+  renderCart();
+
+}
+
+
+function renderCart(){
+
+  const container =
+    document.getElementById(
+      "cartContainer"
+    );
+
+
+  const totalElement =
+    document.getElementById(
+      "totalPrice"
+    );
+
+
+  container.innerHTML = "";
+
+
+  if(cart.length === 0){
+
+    container.innerHTML =
+      '<p class="empty">Cart is empty</p>';
+
+
+    totalElement.innerText =
+      "Total: ₹0";
+
+
+    return;
+
+  }
+
+
+  let total = 0;
+
+
+  cart.forEach(item => {
+
+
+    total +=
+      item.price * item.qty;
+
+
+    const div =
+      document.createElement(
+        "div"
+      );
+
+
+    div.className =
+      "cart-item";
+
+
+    div.innerHTML = `
+      <div>
+
+        <strong>
+          ${item.name}
+        </strong>
+
+        <br>
+
+        ₹${item.price} × ${item.qty}
+
+      </div>
+
+
+      <div>
+
+        ₹${item.price * item.qty}
+
+        <button
+          type="button"
+          class="remove-btn"
+          onclick="removeItem('${item.name}')"
+        >
+          X
+        </button>
+
+      </div>
+    `;
+
+
+    container.appendChild(div);
+
+  });
+
+
+  totalElement.innerText =
+    `Total: ₹${total}`;
+
+}
+
+
+/* =========================
+   START PAYMENT
+========================= */
+
+document
+.getElementById("orderForm")
+.addEventListener(
+  "submit",
+  async function(event){
+
+
+    event.preventDefault();
+
+
+    if(cart.length === 0){
+
+      alert(
+        "Please add items"
+      );
+
+      return;
+
+    }
+
+
+    const name =
+      document
+      .getElementById("username")
+      .value
+      .trim();
+
+
+    const mobile =
+      document
+      .getElementById("mobile")
+      .value
+      .trim();
+
+
+    const location =
+      document
+      .getElementById("location")
+      .value
+      .trim();
+
+
+    if(mobile.length < 10){
+
+      alert(
+        "Invalid mobile number"
+      );
+
+      return;
+
+    }
+
+
+    const button =
+      document.querySelector(
+        ".submit-btn"
+      );
+
+
+    button.innerText =
+      "Opening payment...";
+
+
+    button.disabled =
+      true;
+
+
+    try{
+
+
+      const response =
+        await fetch(
+          BACKEND_URL,
+          {
+
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json"
+            },
+
+
+            body:
+              JSON.stringify({
+
+                customer:{
+                  name,
+                  mobile,
+                  location
+                },
+
+                cart
+
+              })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if(
+        response.ok &&
+        data.checkoutUrl
+      ){
+
+        window.location.href =
+          data.checkoutUrl;
+
+        return;
+
+      }
+
+
+      alert(
+        data.message ||
+        "Unable to start payment"
+      );
+
+
+    } catch(error){
+
+
+      console.error(
+        "Payment error:",
+        error
+      );
+
+
+      alert(
+        "Unable to connect to payment server"
+      );
+
+
+    } finally {
+
+
+      button.innerText =
+        "Proceed to Payment";
+
+
+      button.disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+/* =========================
+   PAYMENT RETURN
+========================= */
+
+const urlParams =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const paymentStatus =
+  urlParams.get(
+    "payment"
+  );
+
+
+if(
+  paymentStatus === "success"
+){
+
+  document
+  .getElementById(
+    "successMessage"
+  )
+  .innerText =
+    "✅ Payment successful! Your order has been confirmed.";
+
+
+  cart = [];
+
+
+  renderCart();
+
+}
+
+
+if(
+  paymentStatus === "cancelled"
+){
+
+  document
+  .getElementById(
+    "successMessage"
+  )
+  .innerText =
+    "Payment was cancelled. Your order was not confirmed.";
+
+}
+
+</script>
+
+
+</body>
+
+</html>
