@@ -1,11 +1,20 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>Bodake's Kitchen</title>
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>
+  Bodake's Kitchen
+</title>
+
 
 <style>
 
@@ -38,7 +47,11 @@ header{
 
 .menu{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(250px,1fr)
+    );
   gap:20px;
 }
 
@@ -46,7 +59,8 @@ header{
   background:white;
   border-radius:12px;
   overflow:hidden;
-  box-shadow:0 3px 10px rgba(0,0,0,0.15);
+  box-shadow:
+    0 3px 10px rgba(0,0,0,0.15);
   transition:0.3s;
 }
 
@@ -82,7 +96,6 @@ button{
   padding:10px 15px;
   border-radius:6px;
   cursor:pointer;
-  transition:0.3s;
 }
 
 button:hover{
@@ -99,7 +112,8 @@ button:disabled{
   background:white;
   padding:25px;
   border-radius:12px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+  box-shadow:
+    0 3px 10px rgba(0,0,0,0.1);
 }
 
 .order-box h2{
@@ -137,10 +151,21 @@ textarea{
   font-size:18px;
 }
 
-.success{
-  color:green;
+.status-message{
   margin-top:15px;
   font-weight:bold;
+}
+
+.success{
+  color:green;
+}
+
+.pending{
+  color:#d97706;
+}
+
+.cancelled{
+  color:#c62828;
 }
 
 .remove-btn{
@@ -154,29 +179,45 @@ textarea{
 }
 
 </style>
+
 </head>
 
+
 <body>
+
 
 <header>
 
   <img
     src="https://res.cloudinary.com/djjqri13t/image/upload/v1779580587/image_20260524_015540e7e0eeb0-5621-425f-96b9-d5262b2ca5ac_mlta57.png"
     alt="Bodake's Kitchen Logo"
-    style="max-width:50%; height:auto; display:block; margin:0 auto;"
+    style="
+      max-width:50%;
+      height:auto;
+      display:block;
+      margin:0 auto;
+    "
   >
 
-  <h1>🍔 Bodake's Kitchen</h1>
+  <h1>
+    🍔 Bodake's Kitchen
+  </h1>
 
-  <p>Fresh Food Delivered Fast</p>
+  <p>
+    Fresh Food Delivered Fast
+  </p>
 
 </header>
 
+
 <div class="container">
+
 
   <div class="menu">
 
+
     <!-- BURGER -->
+
     <div class="card">
 
       <img
@@ -186,13 +227,22 @@ textarea{
 
       <div class="card-content">
 
-        <h3>Burger</h3>
+        <h3>
+          Burger
+        </h3>
 
         <div class="price">
           ₹199
         </div>
 
-        <button onclick="addToCart('Burger',199)">
+        <button
+          onclick="
+            addToCart(
+              'Burger',
+              199
+            )
+          "
+        >
           Add to Cart
         </button>
 
@@ -202,6 +252,7 @@ textarea{
 
 
     <!-- PIZZA -->
+
     <div class="card">
 
       <img
@@ -211,13 +262,22 @@ textarea{
 
       <div class="card-content">
 
-        <h3>Pizza</h3>
+        <h3>
+          Pizza
+        </h3>
 
         <div class="price">
           ₹299
         </div>
 
-        <button onclick="addToCart('Pizza',299)">
+        <button
+          onclick="
+            addToCart(
+              'Pizza',
+              299
+            )
+          "
+        >
           Add to Cart
         </button>
 
@@ -227,6 +287,7 @@ textarea{
 
 
     <!-- PASTA -->
+
     <div class="card">
 
       <img
@@ -236,19 +297,29 @@ textarea{
 
       <div class="card-content">
 
-        <h3>Pasta</h3>
+        <h3>
+          Pasta
+        </h3>
 
         <div class="price">
           ₹249
         </div>
 
-        <button onclick="addToCart('Pasta',249)">
+        <button
+          onclick="
+            addToCart(
+              'Pasta',
+              249
+            )
+          "
+        >
           Add to Cart
         </button>
 
       </div>
 
     </div>
+
 
   </div>
 
@@ -257,7 +328,11 @@ textarea{
 
   <div class="order-box">
 
-    <h2>Your Order</h2>
+
+    <h2>
+      Your Order
+    </h2>
+
 
     <div id="cartContainer">
 
@@ -266,6 +341,7 @@ textarea{
       </p>
 
     </div>
+
 
     <div
       class="total"
@@ -277,6 +353,7 @@ textarea{
 
     <form id="orderForm">
 
+
       <input
         type="text"
         id="username"
@@ -284,12 +361,14 @@ textarea{
         required
       >
 
+
       <input
         type="tel"
         id="mobile"
         placeholder="Mobile Number"
         required
       >
+
 
       <textarea
         id="location"
@@ -306,27 +385,34 @@ textarea{
         Proceed to Payment
       </button>
 
+
     </form>
 
 
     <p
-      class="success"
+      class="status-message"
       id="successMessage"
     ></p>
 
+
   </div>
+
 
 </div>
 
 
 <script>
 
+
 /* =========================
    BACKEND
 ========================= */
 
+const BACKEND_BASE_URL =
+  "https://food-menu-backend-5z12.onrender.com";
+
 const BACKEND_URL =
-  "https://food-menu-backend-5z12.onrender.com/order";
+  `${BACKEND_BASE_URL}/order`;
 
 
 /* =========================
@@ -336,10 +422,17 @@ const BACKEND_URL =
 let cart = [];
 
 
-function addToCart(name, price){
+function addToCart(
+  name,
+  price
+){
 
   const existing =
-    cart.find(item => item.name === name);
+    cart.find(
+      item =>
+        item.name === name
+    );
+
 
   if(existing){
 
@@ -348,102 +441,152 @@ function addToCart(name, price){
   } else {
 
     cart.push({
-      name,
-      price,
-      qty:1
+
+      name:
+        name,
+
+      price:
+        price,
+
+      qty:
+        1
+
     });
 
   }
 
+
   renderCart();
+
 }
 
+
+/* =========================
+   REMOVE ITEM
+========================= */
 
 function removeItem(name){
 
   cart =
-    cart.filter(item => item.name !== name);
+    cart.filter(
+      item =>
+        item.name !== name
+    );
+
 
   renderCart();
+
 }
 
+
+/* =========================
+   RENDER CART
+========================= */
 
 function renderCart(){
 
   const container =
-    document.getElementById("cartContainer");
+    document.getElementById(
+      "cartContainer"
+    );
+
 
   const totalElement =
-    document.getElementById("totalPrice");
+    document.getElementById(
+      "totalPrice"
+    );
 
 
-  container.innerHTML = "";
+  container.innerHTML =
+    "";
 
 
-  if(cart.length === 0){
+  if(
+    cart.length === 0
+  ){
 
     container.innerHTML =
       '<p class="empty">Cart is empty</p>';
 
+
     totalElement.innerText =
       "Total: ₹0";
 
+
     return;
+
   }
 
 
   let total = 0;
 
 
-  cart.forEach(item => {
+  cart.forEach(
+    item => {
 
-    total +=
-      item.price * item.qty;
-
-
-    const div =
-      document.createElement("div");
+      total +=
+        item.price *
+        item.qty;
 
 
-    div.className =
-      "cart-item";
+      const div =
+        document.createElement(
+          "div"
+        );
 
 
-    div.innerHTML = `
-      <div>
-
-        <strong>
-          ${item.name}
-        </strong>
-
-        <br>
-
-        ₹${item.price} × ${item.qty}
-
-      </div>
-
-      <div>
-
-        ₹${item.price * item.qty}
-
-        <button
-          class="remove-btn"
-          onclick="removeItem('${item.name}')"
-        >
-          X
-        </button>
-
-      </div>
-    `;
+      div.className =
+        "cart-item";
 
 
-    container.appendChild(div);
+      div.innerHTML = `
 
-  });
+        <div>
+
+          <strong>
+            ${item.name}
+          </strong>
+
+          <br>
+
+          ₹${item.price}
+          ×
+          ${item.qty}
+
+        </div>
+
+
+        <div>
+
+          ₹${item.price * item.qty}
+
+          <button
+            class="remove-btn"
+            onclick="
+              removeItem(
+                '${item.name}'
+              )
+            "
+          >
+            X
+          </button>
+
+        </div>
+
+      `;
+
+
+      container.appendChild(
+        div
+      );
+
+    }
+  );
 
 
   totalElement.innerText =
     `Total: ₹${total}`;
+
 }
 
 
@@ -452,53 +595,73 @@ function renderCart(){
 ========================= */
 
 document
-.getElementById("orderForm")
+.getElementById(
+  "orderForm"
+)
 .addEventListener(
   "submit",
-  async function(e){
+  async function(event){
 
-    e.preventDefault();
+    event.preventDefault();
 
 
-    if(cart.length === 0){
+    if(
+      cart.length === 0
+    ){
 
-      alert("Please add items");
+      alert(
+        "Please add items"
+      );
 
       return;
+
     }
 
 
     const name =
       document
-      .getElementById("username")
-      .value
-      .trim();
+        .getElementById(
+          "username"
+        )
+        .value
+        .trim();
 
 
     const mobile =
       document
-      .getElementById("mobile")
-      .value
-      .trim();
+        .getElementById(
+          "mobile"
+        )
+        .value
+        .trim();
 
 
     const location =
       document
-      .getElementById("location")
-      .value
-      .trim();
+        .getElementById(
+          "location"
+        )
+        .value
+        .trim();
 
 
-    if(mobile.length < 10){
+    if(
+      mobile.length < 10
+    ){
 
-      alert("Invalid mobile number");
+      alert(
+        "Invalid mobile number"
+      );
 
       return;
+
     }
 
 
     const button =
-      document.querySelector(".submit-btn");
+      document.querySelector(
+        ".submit-btn"
+      );
 
 
     button.innerText =
@@ -510,35 +673,40 @@ document
 
     try{
 
-      /*
-       * Send the order to our Render backend.
-       *
-       * The backend creates a pending order
-       * and a Stripe Checkout session.
-       */
+
       const response =
         await fetch(
           BACKEND_URL,
           {
 
-            method:"POST",
+            method:
+              "POST",
 
             headers:{
               "Content-Type":
                 "application/json"
             },
 
-            body:JSON.stringify({
+            body:
+              JSON.stringify({
 
-              customer:{
-                name,
-                mobile,
-                location
-              },
+                customer:{
 
-              cart
+                  name:
+                    name,
 
-            })
+                  mobile:
+                    mobile,
+
+                  location:
+                    location
+
+                },
+
+                cart:
+                  cart
+
+              })
 
           }
         );
@@ -548,19 +716,18 @@ document
         await response.json();
 
 
-      /*
-       * Stripe Checkout session was
-       * successfully created.
-       */
       if(
         response.ok &&
         data.checkoutUrl
       ){
 
         /*
-         * Redirect user from Food Menu
-         * to Stripe Checkout.
+         * The order is NOT confirmed here.
+         *
+         * We only redirect the customer
+         * to Stripe.
          */
+
         window.location.href =
           data.checkoutUrl;
 
@@ -577,6 +744,7 @@ document
 
     } catch(error){
 
+
       console.error(
         "Payment error:",
         error
@@ -590,11 +758,14 @@ document
 
     } finally {
 
+
       button.innerText =
         "Proceed to Payment";
 
+
       button.disabled =
         false;
+
 
     }
 
@@ -606,16 +777,6 @@ document
    PAYMENT RETURN
 ========================= */
 
-/*
- * Stripe sends the customer back to
- *
- * ?payment=success
- *
- * or
- *
- * ?payment=cancelled
- */
-
 const urlParams =
   new URLSearchParams(
     window.location.search
@@ -623,38 +784,227 @@ const urlParams =
 
 
 const paymentStatus =
-  urlParams.get("payment");
+  urlParams.get(
+    "payment"
+  );
 
 
-if(paymentStatus === "success"){
+const sessionId =
+  urlParams.get(
+    "session_id"
+  );
 
-  document
-  .getElementById("successMessage")
-  .innerText =
-    "✅ Payment successful! Your order has been confirmed.";
+
+const messageElement =
+  document.getElementById(
+    "successMessage"
+  );
+
+
+/* =========================
+   SUCCESS RETURN
+========================= */
+
+/*
+ * IMPORTANT:
+ *
+ * "?payment=success"
+ * DOES NOT itself mean the order
+ * is confirmed.
+ *
+ * The frontend asks the backend.
+ */
+
+if(
+  paymentStatus === "success" &&
+  sessionId
+){
+
+  messageElement.className =
+    "status-message pending";
+
+
+  messageElement.innerText =
+    "⏳ Payment received. Confirming your order...";
+
+
+  let attempts = 0;
+
+  const MAX_ATTEMPTS = 15;
+
+
+  async function checkOrderStatus(){
+
+    attempts += 1;
+
+
+    try{
+
+
+      const response =
+        await fetch(
+
+          `${BACKEND_BASE_URL}/order-status` +
+          `?session_id=` +
+          encodeURIComponent(
+            sessionId
+          )
+
+        );
+
+
+      const data =
+        await response.json();
+
+
+      /*
+       * ONLY THIS condition displays
+       * "Payment successful".
+       */
+
+      if(
+        response.ok &&
+        data.payment_status ===
+          "paid" &&
+        data.order_status ===
+          "confirmed"
+      ){
+
+        messageElement.className =
+          "status-message success";
+
+
+        messageElement.innerText =
+          "✅ Payment successful! Your order has been confirmed.";
+
+
+        cart = [];
+
+
+        renderCart();
+
+
+        /*
+         * Remove payment parameters
+         * from the browser address.
+         *
+         * This prevents the old success
+         * message appearing again after
+         * a later refresh.
+         */
+
+        window.history.replaceState(
+          {},
+          document.title,
+          window.location.pathname
+        );
+
+
+        return;
+
+      }
+
+
+      /*
+       * Webhook may take a few seconds.
+       */
+
+      if(
+        attempts <
+        MAX_ATTEMPTS
+      ){
+
+        setTimeout(
+          checkOrderStatus,
+          2000
+        );
+
+      } else {
+
+        messageElement.className =
+          "status-message pending";
+
+
+        messageElement.innerText =
+          "Payment verification is taking longer than expected. Please check your order status.";
+
+      }
+
+
+    } catch(error){
+
+
+      console.error(
+        "Order verification error:",
+        error
+      );
+
+
+      if(
+        attempts <
+        MAX_ATTEMPTS
+      ){
+
+        setTimeout(
+          checkOrderStatus,
+          2000
+        );
+
+      } else {
+
+        messageElement.className =
+          "status-message pending";
+
+
+        messageElement.innerText =
+          "Unable to verify the payment right now. Please check your order status.";
+
+      }
+
+    }
+
+  }
+
+
+  checkOrderStatus();
+
+}
+
+
+/* =========================
+   CANCELLED PAYMENT
+========================= */
+
+if(
+  paymentStatus ===
+  "cancelled"
+){
+
+  messageElement.className =
+    "status-message cancelled";
+
+
+  messageElement.innerText =
+    "Payment was cancelled. Your order was not confirmed.";
 
 
   /*
-   * The payment has completed,
-   * so clear the local cart.
+   * Remove payment parameter so
+   * this message does not remain
+   * forever after refresh.
    */
-  cart = [];
 
-  renderCart();
-
-}
-
-
-if(paymentStatus === "cancelled"){
-
-  document
-  .getElementById("successMessage")
-  .innerText =
-    "Payment was cancelled. Your order was not confirmed.";
+  window.history.replaceState(
+    {},
+    document.title,
+    window.location.pathname
+  );
 
 }
+
 
 </script>
+
 
 </body>
 
