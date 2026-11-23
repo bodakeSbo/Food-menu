@@ -5,9 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const { createClient } = require("@supabase/supabase-js");
-const stripe = require("stripe")(
-  process.env.STRIPE_SECRET_KEY
-);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const app = express();
 
@@ -24,14 +22,10 @@ const supabase = createClient(
    GITHUB SETUP
 ========================= */
 
-const GITHUB_TOKEN =
-  process.env.GITHUB_TOKEN;
-
-const OWNER = "bodakeSbo";
-const REPO = "Food-menu";
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
 /* =========================
-   TWILIO WHATSAPP SETUP
+   TWILIO SETUP
 ========================= */
 
 const client = twilio(
@@ -44,17 +38,13 @@ const client = twilio(
 ========================= */
 
 /*
+ * IMPORTANT:
  * These are the official prices.
- *
- * The backend uses these prices for:
- * 1. Calculating the total
- * 2. Saving the order in Supabase
- * 3. Creating the Stripe Checkout payment
- *
- * Prices received from the web browser are ignored.
+ * Prices coming from index.html are ignored.
  */
 
 const PRODUCTS = {
+
   Burger: {
     name: "Burger",
     price: 199
@@ -69,7 +59,9 @@ const PRODUCTS = {
     name: "Pasta",
     price: 249
   }
+
 };
+
 
 /* =========================
    GENERAL MIDDLEWARE
@@ -77,16 +69,12 @@ const PRODUCTS = {
 
 app.use(cors());
 
-/*
- * The Stripe webhook must be registered
- * before app.use(express.json()).
- *
- * Stripe needs the original raw request
- * body to verify the webhook signature.
- */
 
 /* =========================
    STRIPE WEBHOOK
+
+   MUST remain BEFORE
+   express.json()
 ========================= */
 
 app.post(
@@ -124,7 +112,9 @@ app.post(
         .send(
           `Webhook error: ${error.message}`
         );
+
     }
+
 
     try {
 
@@ -136,6 +126,7 @@ app.post(
         const session =
           event.data.object;
 
+
         if (
           session.payment_status === "paid"
         ) {
@@ -145,7 +136,7 @@ app.post(
         } else {
 
           console.log(
-            `Stripe session ${session.id} completed, ` +
+            `Session ${session.id} completed ` +
             `but payment status is ${session.payment_status}`
           );
 
@@ -153,51 +144,49 @@ app.post(
 
       }
 
-      return res
-        .status(200)
-        .json({
-          received: true
-        });
+
+      return res.status(200).json({
+        received: true
+      });
+
 
     } catch (error) {
 
       console.error(
-        "Stripe webhook processing failed:",
+        "Webhook processing failed:",
         error
       );
 
-      return res
-        .status(500)
-        .json({
-          received: false,
-          message:
-            "Webhook processing failed"
-        });
+      return res.status(500).json({
+        received: false,
+        message: "Webhook processing failed"
+      });
 
     }
 
   }
 );
 
+
 /*
- * Normal JSON parsing starts only
- * after the Stripe webhook route.
+ * Normal application JSON parsing
+ * starts AFTER Stripe webhook.
  */
 
 app.use(express.json());
 
+
 /* =========================
-   WHATSAPP FUNCTION
+   WHATSAPP NOTIFICATION
 ========================= */
 
-async function sendWhatsAppNotification(
-  order
-) {
+async function sendWhatsAppNotification(order) {
 
   const cart =
     Array.isArray(order.items)
       ? order.items
       : [];
+
 
   const itemsText =
     cart
@@ -215,6 +204,7 @@ async function sendWhatsAppNotification(
       })
       .join("\n");
 
+
   const whatsappMessage = `
 🍔 NEW PAID FOOD ORDER
 
@@ -230,8 +220,10 @@ ${order.address}
 ${itemsText}
 
 💰 TOTAL: ₹${order.total_amount}
+
 ✅ PAYMENT: CONFIRMED
 `;
+
 
   await client.messages.create({
 
@@ -246,10 +238,13 @@ ${itemsText}
 
   });
 
+
   console.log(
     `WhatsApp notification sent for order ${order.id}`
   );
+
 }
+
 
 /* =========================
    CONFIRM PAID ORDER
@@ -260,6 +255,7 @@ async function confirmPaidOrder(session) {
   const orderId =
     session.metadata?.orderId;
 
+
   if (!orderId) {
 
     throw new Error(
@@ -267,6 +263,7 @@ async function confirmPaidOrder(session) {
     );
 
   }
+
 
   const {
     data: existingOrder,
@@ -276,6 +273,7 @@ async function confirmPaidOrder(session) {
     .select("*")
     .eq("id", orderId)
     .single();
+
 
   if (
     lookupError ||
@@ -288,37 +286,33 @@ async function confirmPaidOrder(session) {
 
   }
 
+
   /*
-   * Stripe can send the same webhook
-   * more than once.
-   *
-   * Do not confirm or notify the
-   * same order twice.
+   * Prevent duplicate processing.
    */
 
   if (
-    existingOrder.payment_status ===
-    "paid"
+    existingOrder.payment_status === "paid"
   ) {
 
     console.log(
-      `Order ${orderId} was already confirmed`
+      `Order ${orderId} already confirmed`
     );
 
     return;
 
   }
 
+
   const expectedAmountInPaise =
     Math.round(
-      Number(
-        existingOrder.total_amount
-      ) * 100
+      Number(existingOrder.total_amount) * 100
     );
 
+
   /*
-   * Confirm that Stripe received
-   * exactly the expected amount.
+   * Verify Stripe actually received
+   * the expected amount.
    */
 
   if (
@@ -327,23 +321,22 @@ async function confirmPaidOrder(session) {
   ) {
 
     throw new Error(
-      `Payment mismatch for order ${orderId}. ` +
-      `Expected ${expectedAmountInPaise}, ` +
-      `received ${session.amount_total}`
+      `Payment amount mismatch for order ${orderId}`
     );
 
   }
+
 
   if (
     session.currency !== "inr"
   ) {
 
     throw new Error(
-      `Unexpected payment currency: ` +
-      `${session.currency}`
+      `Unexpected currency: ${session.currency}`
     );
 
   }
+
 
   const {
     data: confirmedOrder,
@@ -368,7 +361,10 @@ async function confirmPaidOrder(session) {
         new Date().toISOString()
 
     })
-    .eq("id", orderId)
+    .eq(
+      "id",
+      orderId
+    )
     .eq(
       "payment_status",
       "pending"
@@ -376,30 +372,33 @@ async function confirmPaidOrder(session) {
     .select()
     .maybeSingle();
 
+
   if (updateError) {
 
     throw updateError;
 
   }
 
+
   /*
-   * Another webhook may already have
-   * completed this order.
+   * Another webhook might already
+   * have processed this payment.
    */
 
   if (!confirmedOrder) {
 
     console.log(
-      `Order ${orderId} was already processed`
+      `Order ${orderId} already processed`
     );
 
     return;
 
   }
 
+
   /*
-   * WhatsApp is sent only after the
-   * verified payment updates the order.
+   * Send WhatsApp only AFTER
+   * payment confirmation.
    */
 
   try {
@@ -417,13 +416,16 @@ async function confirmPaidOrder(session) {
 
   }
 
+
   console.log(
     `Payment confirmed for order ${orderId}`
   );
+
 }
 
+
 /* =========================
-   CREATE PAYMENT API
+   CREATE PAYMENT
 ========================= */
 
 app.post(
@@ -435,8 +437,9 @@ app.post(
       const order =
         req.body;
 
+
       /*
-       * Validate customer details.
+       * CUSTOMER VALIDATION
        */
 
       if (
@@ -446,21 +449,20 @@ app.post(
         !order.customer.location
       ) {
 
-        return res
-          .status(400)
-          .json({
+        return res.status(400).json({
 
-            success: false,
+          success: false,
 
-            message:
-              "Customer details are incomplete"
+          message:
+            "Customer details are incomplete"
 
-          });
+        });
 
       }
 
+
       /*
-       * Validate the cart.
+       * CART VALIDATION
        */
 
       if (
@@ -468,27 +470,26 @@ app.post(
         order.cart.length === 0
       ) {
 
-        return res
-          .status(400)
-          .json({
+        return res.status(400).json({
 
-            success: false,
+          success: false,
 
-            message:
-              "Cart is empty"
+          message:
+            "Cart is empty"
 
-          });
+        });
 
       }
 
+
       /*
-       * Build a secure cart.
+       * SERVER VALIDATED CART
        *
-       * Prices from the frontend
-       * are completely ignored.
+       * Browser prices are ignored.
        */
 
       const validatedCart = [];
+
 
       for (
         const item of order.cart
@@ -500,30 +501,20 @@ app.post(
         const quantity =
           Number(item.qty);
 
-        /*
-         * Product must exist in the
-         * server product catalogue.
-         */
 
         if (!product) {
 
-          return res
-            .status(400)
-            .json({
+          return res.status(400).json({
 
-              success: false,
+            success: false,
 
-              message:
-                `Invalid product: ${item.name}`
+            message:
+              `Invalid product: ${item.name}`
 
-            });
+          });
 
         }
 
-        /*
-         * Quantity must be a whole
-         * number between 1 and 20.
-         */
 
         if (
           !Number.isInteger(quantity) ||
@@ -531,18 +522,17 @@ app.post(
           quantity > 20
         ) {
 
-          return res
-            .status(400)
-            .json({
+          return res.status(400).json({
 
-              success: false,
+            success: false,
 
-              message:
-                `Invalid quantity for ${item.name}`
+            message:
+              `Invalid quantity for ${item.name}`
 
-            });
+          });
 
         }
+
 
         validatedCart.push({
 
@@ -559,9 +549,10 @@ app.post(
 
       }
 
+
       /*
-       * Calculate the total using
-       * server-controlled prices.
+       * CALCULATE TOTAL USING
+       * SERVER PRICES
        */
 
       const total =
@@ -578,12 +569,9 @@ app.post(
           0
         );
 
+
       /*
-       * Create a pending order.
-       *
-       * The order is not confirmed
-       * until Stripe sends a verified
-       * successful-payment webhook.
+       * CREATE PENDING ORDER
        */
 
       const {
@@ -603,10 +591,6 @@ app.post(
             address:
               order.customer.location,
 
-            /*
-             * Store server-validated
-             * product prices.
-             */
             items:
               validatedCart,
 
@@ -624,6 +608,7 @@ app.post(
         .select()
         .single();
 
+
       if (dbError) {
 
         console.error(
@@ -631,25 +616,20 @@ app.post(
           dbError
         );
 
-        return res
-          .status(500)
-          .json({
+        return res.status(500).json({
 
-            success: false,
+          success: false,
 
-            message:
-              "Database insert failed"
+          message:
+            "Database insert failed"
 
-          });
+        });
 
       }
 
+
       /*
-       * Create Stripe Checkout using
-       * server-controlled prices.
-       *
-       * INR uses paise:
-       * ₹199 becomes 19900 paise.
+       * CREATE STRIPE CHECKOUT
        */
 
       const checkoutSession =
@@ -663,6 +643,7 @@ app.post(
 
             payment_method_types:
               ["card"],
+
 
             line_items:
               validatedCart.map(
@@ -693,6 +674,7 @@ app.post(
                 })
               ),
 
+
             metadata: {
 
               orderId:
@@ -702,10 +684,12 @@ app.post(
 
             },
 
+
             success_url:
               `${process.env.FRONTEND_URL}` +
               `?payment=success` +
               `&session_id={CHECKOUT_SESSION_ID}`,
+
 
             cancel_url:
               `${process.env.FRONTEND_URL}` +
@@ -713,9 +697,9 @@ app.post(
 
           });
 
+
       /*
-       * Save the Stripe session ID
-       * on the pending order.
+       * SAVE STRIPE SESSION
        */
 
       const {
@@ -733,29 +717,30 @@ app.post(
           pendingOrder.id
         );
 
+
       if (sessionUpdateError) {
 
         console.error(
-          "Unable to save Stripe session ID:",
+          "Unable to save Stripe session:",
           sessionUpdateError
         );
 
       }
 
-      return res
-        .status(200)
-        .json({
 
-          success:
-            true,
+      return res.status(200).json({
 
-          message:
-            "Payment session created",
+        success:
+          true,
 
-          checkoutUrl:
-            checkoutSession.url
+        message:
+          "Payment session created",
 
-        });
+        checkoutUrl:
+          checkoutSession.url
+
+      });
+
 
     } catch (error) {
 
@@ -766,113 +751,7 @@ app.post(
         error.message
       );
 
-      return res
-        .status(500)
-        .json({
 
-          success: false,
+      return res.status(500).json({
 
-          message:
-            "Unable to start payment"
-
-        });
-
-    }
-
-  }
-);
-
-/* =========================
-   GITHUB TEST ROUTE
-========================= */
-
-app.get(
-  "/github-test",
-  async (req, res) => {
-
-    try {
-
-      const response =
-        await axios.get(
-          "https://api.github.com/user",
-          {
-
-            headers: {
-
-              Authorization:
-                `Bearer ${GITHUB_TOKEN}`,
-
-              Accept:
-                "application/vnd.github+json"
-
-            }
-
-          }
-        );
-
-      return res.json({
-
-        ok:
-          true,
-
-        login:
-          response.data.login
-
-      });
-
-    } catch (error) {
-
-      return res.json({
-
-        ok:
-          false,
-
-        error:
-          error.response?.data ||
-          error.message
-
-      });
-
-    }
-
-  }
-);
-
-/* =========================
-   HEALTH CHECK
-========================= */
-
-app.get(
-  "/",
-  (req, res) => {
-
-    res.json({
-
-      ok:
-        true,
-
-      service:
-        "Food Menu Backend"
-
-    });
-
-  }
-);
-
-/* =========================
-   START SERVER
-========================= */
-
-const PORT =
-  process.env.PORT || 3000;
-
-app.listen(
-  PORT,
-  () => {
-
-    console.log(
-      `Server running on port ${PORT}`
-    );
-
-  }
-);
+    
