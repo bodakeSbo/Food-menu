@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -88,6 +89,11 @@ button:hover{
   background:#e64a19;
 }
 
+button:disabled{
+  opacity:0.7;
+  cursor:not-allowed;
+}
+
 .order-box{
   margin-top:40px;
   background:white;
@@ -116,7 +122,8 @@ button:hover{
   font-weight:bold;
 }
 
-input,textarea{
+input,
+textarea{
   width:100%;
   padding:12px;
   margin-top:12px;
@@ -141,11 +148,6 @@ input,textarea{
   padding:6px 10px;
 }
 
-.loading{
-  opacity:0.7;
-  pointer-events:none;
-}
-
 .empty{
   color:#777;
   margin-bottom:15px;
@@ -157,9 +159,17 @@ input,textarea{
 <body>
 
 <header>
-  <img src="https://res.cloudinary.com/djjqri13t/image/upload/v1779580587/image_20260524_015540e7e0eeb0-5621-425f-96b9-d5262b2ca5ac_mlta57.png" alt="Bodake's Kitchen Logo" style="max-width: 50%; height: auto; display: block; margin: 0 auto;">
+
+  <img
+    src="https://res.cloudinary.com/djjqri13t/image/upload/v1779580587/image_20260524_015540e7e0eeb0-5621-425f-96b9-d5262b2ca5ac_mlta57.png"
+    alt="Bodake's Kitchen Logo"
+    style="max-width:50%; height:auto; display:block; margin:0 auto;"
+  >
+
   <h1>🍔 Bodake's Kitchen</h1>
+
   <p>Fresh Food Delivered Fast</p>
+
 </header>
 
 <div class="container">
@@ -168,54 +178,102 @@ input,textarea{
 
     <!-- BURGER -->
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600">
+
+      <img
+        src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600"
+        alt="Burger"
+      >
+
       <div class="card-content">
+
         <h3>Burger</h3>
-        <div class="price">₹199</div>
+
+        <div class="price">
+          ₹199
+        </div>
+
         <button onclick="addToCart('Burger',199)">
           Add to Cart
         </button>
+
       </div>
+
     </div>
+
 
     <!-- PIZZA -->
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600">
+
+      <img
+        src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600"
+        alt="Pizza"
+      >
+
       <div class="card-content">
+
         <h3>Pizza</h3>
-        <div class="price">₹299</div>
+
+        <div class="price">
+          ₹299
+        </div>
+
         <button onclick="addToCart('Pizza',299)">
           Add to Cart
         </button>
+
       </div>
+
     </div>
+
 
     <!-- PASTA -->
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600">
+
+      <img
+        src="https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?w=600"
+        alt="Pasta"
+      >
+
       <div class="card-content">
+
         <h3>Pasta</h3>
-        <div class="price">₹249</div>
+
+        <div class="price">
+          ₹249
+        </div>
+
         <button onclick="addToCart('Pasta',249)">
           Add to Cart
         </button>
+
       </div>
+
     </div>
 
   </div>
 
+
   <!-- ORDER SECTION -->
+
   <div class="order-box">
 
     <h2>Your Order</h2>
 
     <div id="cartContainer">
-      <p class="empty">Cart is empty</p>
+
+      <p class="empty">
+        Cart is empty
+      </p>
+
     </div>
 
-    <div class="total" id="totalPrice">
+    <div
+      class="total"
+      id="totalPrice"
+    >
       Total: ₹0
     </div>
+
 
     <form id="orderForm">
 
@@ -240,47 +298,75 @@ input,textarea{
         required
       ></textarea>
 
-      <button class="submit-btn" type="submit">
-        Place Order
+
+      <button
+        class="submit-btn"
+        type="submit"
+      >
+        Proceed to Payment
       </button>
 
     </form>
 
-    <p class="success" id="successMessage"></p>
+
+    <p
+      class="success"
+      id="successMessage"
+    ></p>
 
   </div>
 
 </div>
 
+
 <script>
 
-const BACKEND_URL = "https://food-menu-backend-5z12.onrender.com/order";
+/* =========================
+   BACKEND
+========================= */
+
+const BACKEND_URL =
+  "https://food-menu-backend-5z12.onrender.com/order";
+
+
+/* =========================
+   CART
+========================= */
 
 let cart = [];
 
+
 function addToCart(name, price){
 
-  const existing = cart.find(item => item.name === name);
+  const existing =
+    cart.find(item => item.name === name);
 
   if(existing){
+
     existing.qty += 1;
+
   } else {
+
     cart.push({
       name,
       price,
       qty:1
     });
+
   }
 
   renderCart();
 }
 
+
 function removeItem(name){
 
-  cart = cart.filter(item => item.name !== name);
+  cart =
+    cart.filter(item => item.name !== name);
 
   renderCart();
 }
+
 
 function renderCart(){
 
@@ -290,140 +376,286 @@ function renderCart(){
   const totalElement =
     document.getElementById("totalPrice");
 
+
   container.innerHTML = "";
+
 
   if(cart.length === 0){
 
     container.innerHTML =
       '<p class="empty">Cart is empty</p>';
 
-    totalElement.innerText = "Total: ₹0";
+    totalElement.innerText =
+      "Total: ₹0";
 
     return;
   }
 
+
   let total = 0;
+
 
   cart.forEach(item => {
 
-    total += item.price * item.qty;
+    total +=
+      item.price * item.qty;
 
-    const div = document.createElement("div");
 
-    div.className = "cart-item";
+    const div =
+      document.createElement("div");
+
+
+    div.className =
+      "cart-item";
+
 
     div.innerHTML = `
       <div>
-        <strong>${item.name}</strong><br>
+
+        <strong>
+          ${item.name}
+        </strong>
+
+        <br>
+
         ₹${item.price} × ${item.qty}
+
       </div>
 
       <div>
+
         ₹${item.price * item.qty}
+
         <button
           class="remove-btn"
           onclick="removeItem('${item.name}')"
         >
           X
         </button>
+
       </div>
     `;
+
 
     container.appendChild(div);
 
   });
 
-  totalElement.innerText = `Total: ₹${total}`;
+
+  totalElement.innerText =
+    `Total: ₹${total}`;
 }
+
+
+/* =========================
+   START PAYMENT
+========================= */
 
 document
 .getElementById("orderForm")
-.addEventListener("submit", async function(e){
+.addEventListener(
+  "submit",
+  async function(e){
 
-  e.preventDefault();
+    e.preventDefault();
 
-  if(cart.length === 0){
-    alert("Please add items");
-    return;
-  }
 
-  const name =
-    document.getElementById("username").value.trim();
+    if(cart.length === 0){
 
-  const mobile =
-    document.getElementById("mobile").value.trim();
+      alert("Please add items");
 
-  const location =
-    document.getElementById("location").value.trim();
+      return;
+    }
 
-  if(mobile.length < 10){
-    alert("Invalid mobile number");
-    return;
-  }
 
-  const button =
-    document.querySelector(".submit-btn");
+    const name =
+      document
+      .getElementById("username")
+      .value
+      .trim();
 
-  button.innerText = "Processing...";
-  button.disabled = true;
 
-  try{
+    const mobile =
+      document
+      .getElementById("mobile")
+      .value
+      .trim();
 
-    const response = await fetch(BACKEND_URL,{
 
-      method:"POST",
+    const location =
+      document
+      .getElementById("location")
+      .value
+      .trim();
 
-      headers:{
-        "Content-Type":"application/json"
-      },
 
-      body:JSON.stringify({
-        customer:{
-          name,
-          mobile,
-          location
-        },
-        cart
-      })
+    if(mobile.length < 10){
 
-    });
+      alert("Invalid mobile number");
 
-    const data = await response.json();
+      return;
+    }
 
-    if(response.ok){
 
-      document.getElementById("successMessage")
-      .innerText =
-        "✅ Order placed successfully! Pay on delivery";
+    const button =
+      document.querySelector(".submit-btn");
 
-      cart = [];
-      renderCart();
 
-      this.reset();
+    button.innerText =
+      "Opening payment...";
 
-    } else {
+    button.disabled =
+      true;
 
-      alert(data.message || "Order failed");
+
+    try{
+
+      /*
+       * Send the order to our Render backend.
+       *
+       * The backend creates a pending order
+       * and a Stripe Checkout session.
+       */
+      const response =
+        await fetch(
+          BACKEND_URL,
+          {
+
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+
+              customer:{
+                name,
+                mobile,
+                location
+              },
+
+              cart
+
+            })
+
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      /*
+       * Stripe Checkout session was
+       * successfully created.
+       */
+      if(
+        response.ok &&
+        data.checkoutUrl
+      ){
+
+        /*
+         * Redirect user from Food Menu
+         * to Stripe Checkout.
+         */
+        window.location.href =
+          data.checkoutUrl;
+
+        return;
+
+      }
+
+
+      alert(
+        data.message ||
+        "Unable to start payment"
+      );
+
+
+    } catch(error){
+
+      console.error(
+        "Payment error:",
+        error
+      );
+
+
+      alert(
+        "Unable to connect to payment server"
+      );
+
+
+    } finally {
+
+      button.innerText =
+        "Proceed to Payment";
+
+      button.disabled =
+        false;
 
     }
 
-  } catch(error){
-
-    console.log(error);
-
-    alert("Server error");
-
-  } finally {
-
-    button.innerText = "Place Order";
-    button.disabled = false;
-
   }
+);
 
-});
+
+/* =========================
+   PAYMENT RETURN
+========================= */
+
+/*
+ * Stripe sends the customer back to
+ *
+ * ?payment=success
+ *
+ * or
+ *
+ * ?payment=cancelled
+ */
+
+const urlParams =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const paymentStatus =
+  urlParams.get("payment");
+
+
+if(paymentStatus === "success"){
+
+  document
+  .getElementById("successMessage")
+  .innerText =
+    "✅ Payment successful! Your order has been confirmed.";
+
+
+  /*
+   * The payment has completed,
+   * so clear the local cart.
+   */
+  cart = [];
+
+  renderCart();
+
+}
+
+
+if(paymentStatus === "cancelled"){
+
+  document
+  .getElementById("successMessage")
+  .innerText =
+    "Payment was cancelled. Your order was not confirmed.";
+
+}
 
 </script>
 
 </body>
+
 </html>
-```
