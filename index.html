@@ -2,12 +2,8 @@
 <html lang="en">
 
 <head>
-
-<meta charset="UTF-8">
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0"
->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
 <title>Bodake's Kitchen</title>
 
@@ -169,41 +165,28 @@ textarea{
 }
 
 </style>
-
 </head>
 
-
 <body>
-
 
 <header>
 
   <img
     src="https://res.cloudinary.com/djjqri13t/image/upload/v1779580587/image_20260524_015540e7e0eeb0-5621-425f-96b9-d5262b2ca5ac_mlta57.png"
     alt="Bodake's Kitchen Logo"
-    style="
-      max-width:50%;
-      height:auto;
-      display:block;
-      margin:0 auto;
-    "
+    style="max-width:50%; height:auto; display:block; margin:0 auto;"
   >
 
   <h1>🍔 Bodake's Kitchen</h1>
-
   <p>Fresh Food Delivered Fast</p>
 
 </header>
 
-
 <div class="container">
-
 
   <div class="menu">
 
-
     <!-- BURGER -->
-
     <div class="card">
 
       <img
@@ -220,6 +203,7 @@ textarea{
         </div>
 
         <button
+          type="button"
           onclick="addToCart('Burger',199)"
         >
           Add to Cart
@@ -231,7 +215,6 @@ textarea{
 
 
     <!-- PIZZA -->
-
     <div class="card">
 
       <img
@@ -248,6 +231,7 @@ textarea{
         </div>
 
         <button
+          type="button"
           onclick="addToCart('Pizza',299)"
         >
           Add to Cart
@@ -259,7 +243,6 @@ textarea{
 
 
     <!-- PASTA -->
-
     <div class="card">
 
       <img
@@ -276,6 +259,7 @@ textarea{
         </div>
 
         <button
+          type="button"
           onclick="addToCart('Pasta',249)"
         >
           Add to Cart
@@ -285,16 +269,13 @@ textarea{
 
     </div>
 
-
   </div>
 
 
   <!-- ORDER SECTION -->
-
   <div class="order-box">
 
     <h2>Your Order</h2>
-
 
     <div id="cartContainer">
 
@@ -303,7 +284,6 @@ textarea{
       </p>
 
     </div>
-
 
     <div
       class="total"
@@ -315,14 +295,12 @@ textarea{
 
     <form id="orderForm">
 
-
       <input
         type="text"
         id="username"
         placeholder="Your Name"
         required
       >
-
 
       <input
         type="tel"
@@ -331,14 +309,12 @@ textarea{
         required
       >
 
-
       <textarea
         id="location"
         rows="4"
         placeholder="Delivery Address"
         required
       ></textarea>
-
 
       <button
         class="submit-btn"
@@ -347,54 +323,4 @@ textarea{
         Proceed to Payment
       </button>
 
-
-    </form>
-
-
-    <!--
-      EMPTY BY DEFAULT.
-
-      Nothing will appear here when
-      somebody normally opens the website.
-    -->
-
-    <p
-      class="status-message"
-      id="successMessage"
-    ></p>
-
-
-  </div>
-
-
-</div>
-
-
-<script>
-
-
-/* =========================
-   BACKEND
-========================= */
-
-const BACKEND_BASE_URL =
-  "https://food-menu-backend-5z12.onrender.com";
-
-const BACKEND_URL =
-  `${BACKEND_BASE_URL}/order`;
-
-
-/* =========================
-   CART
-========================= */
-
-let cart = [];
-
-
-/* =========================
-   ADD TO CART
-========================= */
-
-function addToCart(name, price){
-
- 
+    </
